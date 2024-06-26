@@ -21,6 +21,7 @@ function convert_to_uf2(target)
 end
 
 includes("all")
+includes("heartbleed")
 
 -- A simple demo using only devices on the Sonata board
 firmware("sonata_simple_demo")

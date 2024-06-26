@@ -76,16 +76,16 @@ namespace sonata::lcd::internal
 
 		lcd_st7735_clean(ctx);
 	}
-} // namespace sonata::lcd::internal
 
-__cheri_libcall SonataLcd::~SonataLcd()
-{
-	clean();
-	// Hold LCD in reset.
-	set_gpio_output_bit(LcdRstPin, false);
-	// Turn off backlight.
-	set_gpio_output_bit(LcdBlPin, false);
-}
+	void __cheri_libcall lcd_destroy(LCD_Interface *lcdIntf, St7735Context *ctx)
+	{
+		lcd_st7735_clean(ctx);
+		// Hold LCD in reset.
+		set_gpio_output_bit(LcdRstPin, false);
+		// Turn off backlight.
+		set_gpio_output_bit(LcdBlPin, false);
+	}
+} // namespace sonata::lcd::internal
 
 void __cheri_libcall SonataLcd::clean()
 {
