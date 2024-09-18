@@ -98,3 +98,30 @@ firmware("hardware_access_part_3")
         }, {expand = false})
     end)
     after_link(convert_to_uf2)
+
+
+-- Part 4
+compartment("gpio_access_static")
+    add_deps("cxxrt")
+    add_files("part_4/gpio_access_static.cc")
+
+compartment("led_walk_static")
+    add_deps("gpio_access_static")
+    add_files("part_4/led_walk_static.cc")
+
+firmware("hardware_access_part_4")
+    add_deps("freestanding", "debug")
+    add_deps("led_walk_static")
+    on_load(function(target)
+        target:values_set("board", "$(board)")
+        target:values_set("threads", {
+            {
+                compartment = "led_walk_static",
+                priority = 1,
+                entry_point = "start_walking",
+                stack_size = 0x400,
+                trusted_stack_frames = 3
+            },
+        }, {expand = false})
+    end)
+    after_link(convert_to_uf2)
