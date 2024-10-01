@@ -137,3 +137,42 @@ firmware("proximity_test")
         }, {expand = false})
     end)
     after_link(convert_to_uf2)
+
+
+-- Demo that does proximity test as well as LCD screen, etc for demos.
+firmware("pretty")
+    add_deps("freestanding", "rainbows", "led_walk_raw", "echo", "lcd_test", "proximity_sensor_example")
+    on_load(function(target)
+        target:values_set("board", "$(board)")
+        target:values_set("threads", {
+            {
+                compartment = "led_walk_raw",
+                priority = 2,
+                entry_point = "start_walking",
+                stack_size = 0x200,
+                trusted_stack_frames = 1
+            },
+            {
+                compartment = "echo",
+                priority = 1,
+                entry_point = "entry_point",
+                stack_size = 0x200,
+                trusted_stack_frames = 1
+            },
+            {
+                compartment = "lcd_test",
+                priority = 2,
+                entry_point = "lcd_test",
+                stack_size = 0x1000,
+                trusted_stack_frames = 1
+            },
+            {
+                compartment = "rainbows",
+                priority = 2,
+                entry_point = "led_there_be_light",
+                stack_size = 0x200,
+                trusted_stack_frames = 1
+            }
+        }, {expand = false})
+    end)
+    after_link(convert_to_uf2)
